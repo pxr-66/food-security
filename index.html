@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1668B1">
+<title>中国粮食安全水平的时空演化特征与驱动机制研究 · 成果展示</title>
+<meta name="description" content="西南交通大学课程小组作业成果展示：用 31 个省、12 年的数据给粮食安全打分，分析时空演化、驱动因素与传导渠道，并给出政策建议。">
+<meta property="og:title" content="中国粮食安全水平的时空演化特征与驱动机制研究 · 成果展示">
+<meta property="og:description" content="熵值法 + TOPSIS 打分 · 时空演化 · 随机森林—SHAP 驱动机制 · 中介效应 · 政策建议">
+<link rel="icon" href="assets/logo_color.png">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<nav id="nav">
+  <a href="#hero" aria-label="回到顶部"><img class="nlogo" data-img="logo_color" alt="西南交通大学"></a>
+  <span class="ntitle">中国粮食安全水平的时空演化特征与驱动机制研究</span>
+  <div class="nlinks">
+    <a href="#overview">概览</a>
+    <a href="#ch1"><b>01</b>打分</a>
+    <a href="#ch2"><b>02</b>变化</a>
+    <a href="#ch3"><b>03</b>驱动</a>
+    <a href="#ch4"><b>04</b>渠道</a>
+    <a href="#ch5"><b>05</b>建议</a>
+  </div>
+  <i id="nprog"></i>
+</nav>
+
+<!-- ================================================================ 首屏 -->
+<header id="hero">
+  <div class="flow" id="flow" aria-hidden="true"></div>
+  <div class="hfade"></div>
+  <div class="wrap hin">
+    <div class="kick" data-r>西南交通大学 · 课程小组作业成果展示</div>
+    <h1 data-r style="--d:.08s">中国粮食安全水平的<br>时空演化特征与<i class="mbr"></i>驱动机制研究</h1>
+    <div class="hsub" data-r style="--d:.16s">基于随机森林—SHAP 模型</div>
+    <p class="hlead" data-r style="--d:.22s">用 31 个省、12 年的数据给粮食安全打分，看它怎么变、是什么在推动、通过什么渠道起作用，最后落到政策建议。页面里的每张图都可以动手操作。</p>
+    <dl class="people" data-r style="--d:.3s">
+      <dt>汇报人</dt><dd><span class="chipn lead">蒙浩煦</span></dd>
+      <dt>小组成员</dt><dd class="members"></dd>
+    </dl>
+    <div class="cta" data-r style="--d:.38s">
+      <a class="btn pri" href="#overview">开始浏览 ↓</a>
+      <a class="btn" href="#ch5">直接看结论</a>
+    </div>
+    <div class="kpis" data-r style="--d:.46s">
+      <div class="kpi"><b><span data-count="0.394" data-dec="3">0.394</span></b><span>2022 年全国综合得分<br>（2011 年 0.296）</span></div>
+      <div class="kpi"><b><span data-count="0.492" data-dec="3">0.492</span></b><span>预计 2030 年<br>全国综合得分</span></div>
+      <div class="kpi"><b><span data-count="58.8" data-dec="1">58.8</span>%</b><span>科技维度对得分的<br>贡献占比</span></div>
+      <div class="kpi"><b><span data-count="0.873" data-dec="3">0.873</span></b><span>随机森林预测准确度<br>（测试集 R²）</span></div>
+    </div>
+  </div>
+  <a class="scue" href="#overview"><i></i>向下滚动</a>
+</header>
+
+<!-- ================================================================ 概览 -->
+<section id="overview" class="chap alt">
+  <div class="wrap">
+    <div class="blk">
+      <div class="bh" data-r><div class="bk">一分钟看懂</div><h3>四个问题，四个答案</h3>
+        <p>研究围绕四个问题展开。每张卡片上半部分是问题和方法，下半部分是我们得到的答案。</p></div>
+      <div class="qa">
+        <div class="card" data-r style="--d:.05s"><div class="qn">01</div><div class="qq">怎么打分？</div><span class="pill">熵值法 + TOPSIS</span>
+          <div class="hr"></div><div class="hero">0.394</div><div class="hc">2022 年全国综合得分</div>
+          <div class="hd">18 项指标合成一个 0—1 的分数，越高越安全；2011 年是 0.296。</div></div>
+        <div class="card" data-r style="--d:.12s"><div class="qn">02</div><div class="qq">变化如何？</div><span class="pill">时序 · 空间 · 灰色预测</span>
+          <div class="hr"></div><div class="hero">+2.63<small>%</small></div><div class="hc">年均增速，预计 2030 年达 0.492</div>
+          <div class="hd">主产区领先，黑龙江连续 12 年第一；区域之间的相对差距在缩小。</div></div>
+        <div class="card" data-r style="--d:.19s"><div class="qn">03</div><div class="qq">谁在驱动？</div><span class="pill">随机森林 + SHAP</span>
+          <div class="hr"></div><div class="hero">58.8<small>%</small></div><div class="hc">科技维度的贡献</div>
+          <div class="hd">农村科技从业人员一项占 47.9%，数字基础设施占 26.5%。</div></div>
+        <div class="card" data-r style="--d:.26s"><div class="qn">04</div><div class="qq">通过什么渠道？</div><span class="pill">中介效应 + Bootstrap</span>
+          <div class="hr"></div><div class="hero">单产</div><div class="hc">最关键的“中间一环”</div>
+          <div class="hd">数字基建经“单产 + 灌溉”双通道起作用；技术培训 74% 的作用经由单产实现。</div></div>
+      </div>
+    </div>
+
+    <div class="blk" id="b-pipe">
+      <div class="bh" data-r><div class="bk">全流程</div><h3>从一堆数据，到一份“药方”</h3>
+        <p>六个步骤环环相扣，每一步的输出就是下一步的输入。点击图标查看每一步做了什么，再跳到对应的交互演示。</p></div>
+      <div class="card pipe" data-r style="--d:.1s">
+        <div class="pnodes" id="pnodes"></div>
+        <div class="pdet" id="pdet"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 01 怎么打分 -->
+<section id="ch1" class="chap">
+  <div class="wrap">
+    <div class="chead">
+      <div data-r>
+        <div class="cn">01</div>
+        <div class="kick ck">怎么打分</div>
+        <h2>把看不见的“粮食安全”，变成能比较的分数</h2>
+        <p>先把 3.8 万个原始数据格清洗干净，再用熵值法定权重、TOPSIS 合成得分，给每个省每年出一份 0—1 的“成绩单”。</p>
+      </div>
+      <div class="cimg" data-r style="--d:.12s"><img data-img="ch1" data-par alt="西南交通大学校园"></div>
+    </div>
+
+    <!-- 1.1 数据清洗 -->
+    <div class="blk" id="b-miss">
+      <div class="bh" data-r><div class="bk">1.1 数据清洗</div><h3>37,944 个数据格里，有 1,441 个是空的</h3>
+        <p>下图每一小格是一个数据：横向按年份分成 12 组、每组 31 个省，纵向是 102 项原始指标。深色的是缺口，点击“一键补齐”，看它们按三种规则被补上。</p></div>
+      <div class="card miss" data-r style="--d:.08s">
+        <div class="vt"><div class="vtt">原始数据缺失分布 <small>悬停查看是哪个省、哪一年、哪项指标</small></div>
+          <button class="btn pri" id="missbtn" style="padding:6px 18px;font-size:15px">一键补齐</button></div>
+        <div class="vh" id="misshost"><canvas id="misscv" aria-label="31 省 × 12 年 × 102 项指标的缺失分布图"></canvas></div>
+        <div class="lg" id="misslg"></div>
+      </div>
+      <div class="g3" style="margin-top:20px">
+        <div class="card" data-r style="--d:.05s"><div class="ct"><span class="sw" style="background:var(--s1)"></span>中间年份缺失</div>
+          <div class="ink2">前后都有数据：用前后两年连一条线，取线上的值（线性插值）。</div></div>
+        <div class="card" data-r style="--d:.12s"><div class="ct"><span class="sw" style="background:var(--s2)"></span>首末年份缺失</div>
+          <div class="ink2">缺在开头或结尾：沿用相邻年份的值。2022 年部分年鉴尚未出版，七成缺口在这里。</div></div>
+        <div class="card" data-r style="--d:.19s"><div class="ct"><span class="sw" style="background:var(--s3)"></span>整列缺失</div>
+          <div class="ink2">某省某项指标 12 年全缺：用当年其他省份的平均值兜底。</div></div>
+      </div>
+      <div class="take" data-r><b>然后：</b>把“越小越好”的指标翻转过来（如受灾率），再把所有指标压缩到 0—1，不同单位的数据才能放在一起比。</div>
+    </div>
+
+    <!-- 1.2 权重实验室 -->
+    <div class="blk lab" id="b-lab">
+      <div class="bh" data-r><div class="bk">1.2 权重实验室</div><h3>4 个维度、18 项指标：权重怎么定，排名就怎么变</h3>
+        <p>论文的做法分两层：4 个维度的权重按研究框架事先给定（40 / 25 / 20 / 15）；维度内部各指标的权重交给<b>熵值法</b>：某项指标各省差别越大，越能拉开差距，权重就越高。拖动滑块改变维度权重，网页会用真实数据重新计算 31 个省的 TOPSIS 得分。</p></div>
+      <div class="gsr">
+        <div class="card" data-r style="--d:.06s">
+          <div class="ct">维度权重 <small>自动换算成合计 100%</small></div>
+          <div class="seg sm presets" id="labpre"></div>
+          <div id="labsl"></div>
+          <div class="ct" style="margin-top:18px">18 项指标的最终权重 <small>= 维度权重 × 维度内熵权占比</small></div>
+          <div class="iw" id="labiw"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="vt"><div class="vtt">各省综合得分排名</div>
+            <div class="yrbox"><input type="range" id="labyr" min="2011" max="2022" value="2022" step="1" aria-label="选择年份"><b id="labyrv">2022</b></div></div>
+          <div class="note" id="labsum" style="margin:-4px 0 10px"></div>
+          <div class="rk" id="labrk"></div>
+          <div class="legend" style="margin-top:10px"><span>右侧数字：相对论文方案的名次变化（<b style="color:var(--blue)">↑</b> 上升 / <b style="color:var(--neg)">↓</b> 下降）</span></div>
+        </div>
+      </div>
+      <div class="take" data-r><b>看点：</b>论文方案和等权方案下，前 5 名都是粮食主产区；极端偏重某一维度时排名会大幅重排，这正是维度权重要依据理论框架事先确定的原因。</div>
+    </div>
+
+    <!-- 1.3 TOPSIS -->
+    <div class="blk" id="b-topsis">
+      <div class="bh" data-r><div class="bk">1.3 TOPSIS 合成得分</div><h3>离“满分省”越近、离“零分省”越远，得分越高</h3>
+        <p>TOPSIS 虚拟出两个标杆：各项都取最好值的“满分省”和各项都取最差值的“零分省”。拖动蓝色圆点，看得分怎么变（示意为两项指标，真实计算是 18 项）。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.06s"><div class="vh" id="tphost"></div></div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="ct">综合得分公式</div>
+          <div style="font-size:clamp(24px,2.6vw,32px);font-weight:700;margin:4px 0 14px">S = D<sup>−</sup> ÷ ( D<sup>+</sup> + D<sup>−</sup> )</div>
+          <div class="ro"><span class="rk2"><span class="lk" style="background:var(--s2)"></span>D<sup>+</sup></span><span class="rvv" id="tpdp">0.000</span><span class="muted" style="font-size:14.5px">到满分省的距离，越小越好</span></div>
+          <div class="ro"><span class="rk2"><span class="lk" style="background:var(--s1)"></span>D<sup>−</sup></span><span class="rvv" id="tpdm">0.000</span><span class="muted" style="font-size:14.5px">到零分省的距离，越大越好</span></div>
+          <div style="margin-top:16px;padding:18px 20px;background:var(--bg);border-radius:14px">
+            <div style="display:flex;align-items:baseline;gap:14px"><span class="ink2">这个省的得分 S</span><span id="tps" style="font-size:48px;font-weight:700;color:var(--blue);line-height:1">0.00</span></div>
+            <div class="meter"><i id="tpm" style="width:50%"></i></div>
+            <div class="meter-l"><span>0：和零分省重合</span><span>1：和满分省重合</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结果：</b>每个省每年都得到一个 0—1 的分数，共 372 个；全国平均从 2011 年的 0.296 升到 2022 年的 0.394。</div>
+    </div>
+
+    <!-- 论文导读 1 -->
+    <div class="blk">
+      <div class="bh sintro" data-r><div class="bk">论文导读</div><h3>论文里是怎么写的</h3><p>向下滚动，镜头会依次推到原文的关键段落，荧光笔标出重点句。</p></div>
+      <div class="scrolly" data-guide="g1"></div>
+    </div>
+  </div>
+</section>
+<!-- ================================================================ 02 变化如何 -->
+<section id="ch2" class="chap alt">
+  <div class="wrap">
+    <div class="chead">
+      <div data-r>
+        <div class="cn">02</div>
+        <div class="kick ck">变化如何</div>
+        <h2>这 12 年，粮食安全怎么变？</h2>
+        <p>时间上看趋势，空间上看格局和“扎堆”现象，再用灰色预测往前看到 2030 年。</p>
+      </div>
+      <div class="cimg" data-r style="--d:.12s"><img data-img="ch2" data-par alt="西南交通大学校园"></div>
+    </div>
+
+    <!-- 2.1 全国 -->
+    <div class="blk" id="b-nat">
+      <div class="bh" data-r><div class="bk">2.1 全国趋势</div><h3>稳步上升，呈“前快后稳”三个阶段</h3>
+        <p>全国综合得分（31 省平均）。在图上移动鼠标或手指，读出每一年的值。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="vtt">全国综合得分 <small>2011—2022 年</small></div><button class="dbtn" data-tbl="natc">表格</button></div>
+          <div class="vh" id="natc"></div>
+        </div>
+        <div class="stack">
+          <div class="g2">
+            <div class="card kpi2" data-r style="--d:.1s"><b>+33.0%</b><span>12 年累计增长</span></div>
+            <div class="card kpi2" data-r style="--d:.14s"><b>2.63%</b><span>年均增速</span></div>
+          </div>
+          <div class="card" data-r style="--d:.18s"><div class="ct">增速放缓 ≠ 能力变弱</div>
+            <ul class="dot"><li><b>前期</b>：主要靠耕地保护、水利建设和机械化快速推进；</li>
+              <li><b>后期</b>：资源环境约束趋紧，增产成本上升，增速自然放缓；</li>
+              <li>发展方式正在从“拼投入”转向<b>“提质量”</b>。</li></ul></div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结论：</b>粮食安全水平持续提升，只有 2021 年小幅回落，整体“稳中有进”。</div>
+    </div>
+
+    <!-- 2.2 排位赛 + 省份档案 -->
+    <div class="blk" id="b-race">
+      <div class="bh" data-r><div class="bk">2.2 省际格局</div><h3>31 个省的 12 年“排位赛”</h3>
+        <p>按当年得分从高到低排列，颜色表示所属粮食区域。拖动年份或点击播放；点击任一省份，旁边会显示它的“档案”。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="yrsl"><button class="ibtn" id="raceplay" aria-label="播放 / 暂停">▶</button>
+            <input type="range" id="raceyr" min="2011" max="2022" value="2011" step="1" aria-label="选择年份"><b id="raceyrv">2011</b></div>
+            <button class="dbtn" data-tbl="racec">表格</button></div>
+          <div class="legend" id="racelg" style="margin-bottom:28px"></div>
+          <div class="vh race" id="racec"></div>
+        </div>
+        <div class="card prof" id="prof" data-r style="--d:.12s"></div>
+      </div>
+      <div class="take" data-r><b>看点：</b>黑龙江 12 年都是第一；排在后面的，一类是耕地少的上海、北京、海南，另一类是高寒干旱的青海。</div>
+    </div>
+
+    <!-- 2.3 四大区域 -->
+    <div class="blk" id="b-reg">
+      <div class="bh" data-r><div class="bk">2.3 四大粮食区域</div><h3>黄淮海、东北领跑，西南追得最快</h3>
+        <p>四条线在同一把尺子上比较；移动鼠标或手指，同时读出四个区域当年的值。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="legend" id="reglg"></div><button class="dbtn" data-tbl="regc" style="margin-left:auto">表格</button></div>
+          <div class="vh" id="regc"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s"><div class="ct">12 年平均与涨幅</div>
+          <table class="rtbl" id="regtbl"></table>
+          <div class="note">注：长三角 2021 年的骤降主要来自上海农业用电量统计值断崖式下降（疑似统计口径调整），原始数据未作修改，论文中已说明。</div></div>
+      </div>
+      <div class="take" data-r><b>结论：</b>基础好的地区保持领先，基础最弱的西南 12 年涨了 45%，区域差距在缩小。</div>
+    </div>
+
+    <!-- 2.4 Moran -->
+    <div class="blk" id="b-moran">
+      <div class="bh" data-r><div class="bk">2.4 空间集聚</div><h3>“好省挨着好省”的扎堆现象在减弱</h3>
+        <p>Moran’s I（莫兰指数）衡量相邻省份的得分是否相似：大于 0 表示“扎堆”，越大越明显。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="vtt">全局 Moran’s I 逐年变化</div><button class="dbtn" data-tbl="morc">表格</button></div>
+          <div class="legend" id="morlg" style="margin-bottom:6px"></div>
+          <div class="vh" id="morc"></div>
+        </div>
+        <div class="stack">
+          <div class="card" data-r style="--d:.1s"><div class="ct">2022 年各省落在哪个象限 <small>悬停或点击查看省份</small></div><div class="quad" id="quad"></div></div>
+          <div class="g2">
+            <div class="card kpi2 ar" data-r style="--d:.14s"><b>0.286<i>→</i><wbr>0.242</b><span>省际变异系数（相对差距）缩小</span></div>
+            <div class="card kpi2 ar" data-r style="--d:.18s"><b class="dk">0.085<i>→</i><wbr>0.095</b><span>省际标准差（绝对差距）尚未缩小</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结论：</b>相对差距在收敛，绝对差距还没缩小，区域协调发展仍需发力。</div>
+    </div>
+
+    <!-- 2.5 灰色预测 -->
+    <div class="blk" id="b-gm">
+      <div class="bh" data-r><div class="bk">2.5 趋势预测</div><h3>预计 2030 年全国得分达到 0.492</h3>
+        <p>GM(1,1) 灰色预测专门处理“年份少”的短序列。切换区域，查看拟合与预测。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="seg" id="gmseg"></div><button class="dbtn" data-tbl="gmc" style="margin-left:auto">表格</button></div>
+          <div class="legend" id="gmlg" style="margin-bottom:6px"></div>
+          <div class="vh" id="gmc"></div>
+        </div>
+        <div class="card acc" data-r style="--d:.12s"><div class="ct">预测靠不靠谱？</div><div id="gmacc"></div></div>
+      </div>
+      <div class="take" data-r><b>结论：</b>全国 2022—2030 年年均增速约 2.83%；西南最快（3.55%），主产区增速放缓、进入“平台期”。</div>
+    </div>
+
+    <div class="blk">
+      <div class="bh sintro" data-r><div class="bk">论文导读</div><h3>论文里是怎么写的</h3><p>格局、集聚与预测三部分的原文要点。</p></div>
+      <div class="scrolly" data-guide="g2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 03 谁在驱动 -->
+<section id="ch3" class="chap">
+  <div class="wrap">
+    <div class="chead">
+      <div data-r>
+        <div class="cn">03</div>
+        <div class="kick ck">谁在驱动</div>
+        <h2>是什么在推动粮食安全？</h2>
+        <p>用机器学习找出“谁的作用最大”，再用 SHAP 把模型的判断“翻译”成人话。</p>
+      </div>
+      <div class="cimg" data-r style="--d:.12s"><img data-img="ch3" data-par alt="西南交通大学校园"></div>
+    </div>
+
+    <!-- 3.1 六个因素 -->
+    <div class="blk" id="b-fac">
+      <div class="bh" data-r><div class="bk">3.1 六个“嫌疑人”</div><h3>科技、绿色、数字三个维度的 6 个因素</h3>
+        <p>被解释的结果是前面算出的综合得分（2012—2022 年，341 个样本）。这 6 个因素与打分指标分开，避免“自己解释自己”。</p></div>
+      <div class="gsr">
+        <div class="g2" id="facs"></div>
+        <div class="card" data-r style="--d:.1s">
+          <div class="vt"><div class="vtt">为什么不用一条直线？<small>真实数据</small></div><button class="dbtn" data-tbl="linc">表格</button></div>
+          <div class="legend" id="linlg" style="margin-bottom:6px"></div>
+          <div class="vh" id="linc"></div>
+          <div class="note">横轴是农村科技从业人员的规模，纵轴是它对得分的贡献。现实是“台阶”：规模小时几乎没用，跨过某个点才突然起作用。直线画不出这种弯，机器学习可以。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3.2 六模型 -->
+    <div class="blk" id="b-models">
+      <div class="bh" data-r><div class="bk">3.2 模型比赛</div><h3>让六种模型“考试”，随机森林最准</h3>
+        <p>80% 的样本给模型学习，20%（68 个）留作“考试题”。点击任一模型，散点会移到它在考试题上的答案。</p></div>
+      <div class="gsr">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="vtt">测试集 R² <small>越接近 1 越准</small></div><button class="dbtn" data-tbl="mc">表格</button></div>
+          <div class="vh" id="mc"></div>
+          <div class="note"><b>随机森林是什么？</b>种一片“决策树”，每棵树随机抽一部分数据各自判断，最后取平均。就像请一群专家各自打分再取平均，比一个人拍板更稳。</div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="vt"><div class="vtt" id="mscT">随机森林：预测值 vs 真实值</div></div>
+          <div class="legend" id="msclg" style="margin-bottom:6px"></div>
+          <div class="vh" id="msc"></div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结论：</b>集成模型（R² ≈ 0.87）远好于传统回归（0.50），说明确实存在非线性关系；随机森林最优，选为主模型。</div>
+    </div>
+
+    <!-- 3.3 稳健性 -->
+    <div class="blk" id="b-rob">
+      <div class="bh" data-r><div class="bk">3.3 压力测试</div><h3>换个考法，随机森林依然靠谱</h3>
+        <p>四种“压力测试”检验模型是不是只是碰巧考得好；四张小图共用同一把 R² 尺子，竖线是基准成绩 0.873。</p></div>
+      <div class="g4 rob" id="rob"></div>
+      <div class="take" data-r><b>结论：</b>换考题、删样本，成绩基本不变；加噪声会变差，符合常理。模型学到的是规律，不是“死记硬背”。</div>
+    </div>
+
+    <!-- 3.4 SHAP 拆解 -->
+    <div class="blk" id="b-shap">
+      <div class="bh" data-r><div class="bk">3.4 SHAP 拆解</div><h3>任选一个省、一年：它的得分是怎么“加”出来的？</h3>
+        <p>SHAP 来自博弈论的“公平分钱”：<b>平均分 + 6 个因素各自的贡献 = 模型给这个省的预测分</b>，每一分都有出处。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="wfc"><select class="sel" id="wfprov" aria-label="选择省份"></select>
+            <div class="yrsl"><input type="range" id="wfyr" min="2012" max="2022" value="2022" step="1" aria-label="选择年份"><b id="wfyrv">2022</b></div>
+            <button class="dbtn" data-tbl="wfc">表格</button></div>
+          <div class="legend" id="wflg" style="margin-bottom:8px"></div>
+          <div class="vh wf" id="wfc"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="ct">一个生活中的比喻</div>
+          <div>6 个人合伙做生意赚了钱，怎么分才公平？看每个人“加入”和“不加入”时利润差多少，把所有加入顺序都算一遍取平均。</div>
+          <div style="margin-top:14px;display:grid;grid-template-columns:auto 1fr;gap:9px 12px;font-size:15.5px;align-items:center">
+            <span class="pill" style="background:#FDF1DC;color:var(--dacc)">合伙人</span><span>6 个影响因素</span>
+            <span class="pill" style="background:#FDF1DC;color:var(--dacc)">利润</span><span>这个省比全部样本平均高（低）多少</span>
+            <span class="pill" style="background:#FDF1DC;color:var(--dacc)">分到的钱</span><span>每个因素的 SHAP 值</span>
+          </div>
+          <div class="take" id="wftake" style="margin-top:18px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3.5 重要性 -->
+    <div class="blk" id="b-imp">
+      <div class="bh" data-r><div class="bk">3.5 谁最重要</div><h3>科技维度贡献近六成，“人”是第一驱动力</h3>
+        <p>6 个因素的平均影响力（平均 |SHAP| 值）占比，全部 341 个样本。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="legend" id="implg"></div><button class="dbtn" data-tbl="impc" style="margin-left:auto">表格</button></div>
+          <div class="vh" id="impc"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="ct">按维度加总</div>
+          <div class="vh" id="dimc"></div>
+          <div style="margin-top:14px;font-size:54px;font-weight:700;color:var(--blue);line-height:1"><span data-count="58.8" data-dec="1">58.8</span>%</div>
+          <div style="margin-top:8px;font-weight:700">科技维度：三项因素合计，居绝对主导</div>
+          <div class="ink2" style="margin-top:10px">换用第二名的梯度提升树重算，<b style="color:var(--ink)">前三名排序不变</b>：结论不依赖于选哪个模型。</div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结论：</b>前两名（科技从业人员 47.9%、数字基础设施 26.5%）合计近四分之三：人才和数字化是两大“发动机”。</div>
+    </div>
+
+    <!-- 3.6 依赖效应 -->
+    <div class="blk" id="b-dep">
+      <div class="bh" data-r><div class="bk">3.6 作用方式</div><h3>有“门槛”，也有“拖累”：逐个因素看</h3>
+        <p>把 341 个样本按某因素从低到高分成五档：柱子是每档的平均贡献（蓝色拉高、红色拉低），灰点是单个样本。切换因素查看。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="seg sm" id="depseg"></div><button class="dbtn" data-tbl="depc" style="margin-left:auto">表格</button></div>
+          <div class="vh" id="depc"></div>
+        </div>
+        <div class="card" id="deptxt" data-r style="--d:.12s"></div>
+      </div>
+    </div>
+
+    <!-- 3.7 交互效应 -->
+    <div class="blk" id="b-int">
+      <div class="bh" data-r><div class="bk">3.7 协同效应</div><h3>因素之间有“配合”，但远不如单独作用</h3>
+        <p>SHAP 交互值：两个因素同时出现时额外多出的效果。和单个因素自己的作用放在同一把尺子上比较。</p></div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.05s">
+          <div class="vt"><div class="legend" id="intlg"></div><button class="dbtn" data-tbl="intc" style="margin-left:auto">表格</button></div>
+          <div class="vh" id="intc"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="ct">怎么读</div>
+          <ul class="dot"><li>最强的“搭配”是<b>科技从业人员 × 数字基础设施</b>；</li>
+            <li>但它的强度只有科技从业人员单独作用的 <b>1/8 左右</b>；</li>
+            <li>最强的三组搭配都与科技从业人员有关，它是协同的<b>核心节点</b>。</li></ul>
+          <div class="take"><b>政策含义：</b>现阶段以“补短板”为主，不宜过度指望协同放大；但“人才 + 数字化”组合值得优先配套。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="bh sintro" data-r><div class="bk">论文导读</div><h3>论文里是怎么写的</h3><p>模型比选、重要性与门槛三处原文要点。</p></div>
+      <div class="scrolly" data-guide="g3"></div>
+    </div>
+  </div>
+</section>
+<!-- ================================================================ 04 通过什么渠道 -->
+<section id="ch4" class="chap alt">
+  <div class="wrap">
+    <div class="chead">
+      <div data-r>
+        <div class="cn">04</div>
+        <div class="kick ck">通过什么渠道</div>
+        <h2>这些力量通过什么渠道起作用？</h2>
+        <p>知道“谁重要”还不够，还要知道“它先改变了什么，再影响了粮食安全”。</p>
+      </div>
+      <div class="cimg" data-r style="--d:.12s"><img data-img="ch4" data-par alt="西南交通大学校园"></div>
+    </div>
+
+    <!-- 4.1 原理 -->
+    <div class="blk" id="b-medidea">
+      <div class="bh" data-r><div class="bk">4.1 中介效应</div><h3>找到“中间那一环”</h3>
+        <p>经典的 Baron-Kenny 三步法：小圆点沿着“影响因素 → 中间环节 → 粮食安全”流动的那部分，就是间接效应 a × b。</p></div>
+      <div class="card" data-r style="--d:.05s"><div class="vh" id="medidea"></div></div>
+      <div class="g3" style="margin-top:20px">
+        <div class="card" data-r style="--d:.05s"><div class="ct">① 三步法</div>
+          <ul class="dot"><li>因素对粮食安全的总效应 c</li><li>因素对中间环节的效应 a</li><li>控制中间环节后，中间环节对结果的效应 b</li></ul></div>
+        <div class="card" data-r style="--d:.12s"><div class="ct">② Bootstrap 检验</div>
+          <div>从样本里有放回地重抽 5000 次，每次都算一遍 a × b。<b>95% 的结果都在 0 的同一侧</b>，才说明这条渠道真实存在。</div></div>
+        <div class="card" data-r style="--d:.19s"><div class="ct">③ 六条待检验路径</div>
+          <ul class="dot"><li>技术效率渠道：H1—H3（单产）</li><li>基础设施渠道：H4—H5（灌溉）</li><li>机械化渠道：H6（机械动力）</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 4.2 结果 -->
+    <div class="blk" id="b-med">
+      <div class="bh" data-r><div class="bk">4.2 检验结果</div><h3>数字基建“双通道”，单产是最关键的中间环节</h3>
+        <p>点击任一条路径，右侧显示它 5000 次重抽样的分布；切换上方口径，看结论在稳健性检验下是否还成立。</p></div>
+      <div class="card" data-r style="--d:.04s;margin-bottom:20px">
+        <div class="vt" style="margin-bottom:4px"><div class="vtt">检验口径</div><div class="seg" id="medmode"></div></div>
+        <div class="note" id="medmodetxt" style="margin-top:4px"></div>
+        <div class="cnt3" id="medcnt"></div>
+      </div>
+      <div class="gs">
+        <div class="card" data-r style="--d:.06s">
+          <div class="vt"><div class="legend" id="medlg"></div><button class="dbtn" data-tbl="medc" style="margin-left:auto">表格</button></div>
+          <div class="vh" id="medc"></div>
+        </div>
+        <div class="card" data-r style="--d:.12s">
+          <div class="ct" id="medT"></div>
+          <div class="medk" id="medstat"></div>
+          <div class="vh" id="histc"></div>
+          <div class="take" id="medtxt" style="margin-top:12px"></div>
+        </div>
+      </div>
+      <div class="take" data-r><b>结论：</b>提高单位面积产量，是科技与数字化转化为粮食安全的“主干道”；这些渠道主要反映省与省之间的结构差异。</div>
+    </div>
+
+    <div class="blk">
+      <div class="bh sintro" data-r><div class="bk">论文导读</div><h3>论文里是怎么写的</h3><p>检验结果与稳健性检验，如实报告。</p></div>
+      <div class="scrolly" data-guide="g4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 05 结论与建议 -->
+<section id="ch5" class="chap">
+  <div class="wrap">
+    <div class="chead">
+      <div data-r>
+        <div class="cn">05</div>
+        <div class="kick ck">结论与建议</div>
+        <h2>从发现，到“该先做什么”</h2>
+        <p>四条结论一一对应开头的四个问题；三条建议、四个区域方案，每一条都有数据依据。</p>
+      </div>
+      <div class="cimg" data-r style="--d:.12s"><img data-img="ch5" data-par alt="西南交通大学校园"></div>
+    </div>
+
+    <!-- 5.1 结论 -->
+    <div class="blk" id="b-con">
+      <div class="bh" data-r><div class="bk">5.1 主要结论</div><h3>四条结论</h3></div>
+      <div class="g2">
+        <div class="card con" data-r style="--d:.05s"><div class="cno">01</div><div class="cti">变好了，相对差距在缩小</div>
+          <div class="chero"><div><b>0.296→0.394</b><span>全国得分 2011→2022</span></div><div><b>0.492</b><span>预计 2030 年</span></div></div>
+          <div class="cdesc">主产区领先，黑龙江连续 12 年第一；Moran’s I 0.322→0.182，相对差距收敛，但绝对差距尚未缩小。</div></div>
+        <div class="card con" data-r style="--d:.1s"><div class="cno">02</div><div class="cti">关系是“弯”的，机器学习看得更准</div>
+          <div class="chero"><div><b>0.873</b><span>随机森林 R²</span></div><div><b style="color:var(--ink2)">0.504</b><span>传统线性回归 R²</span></div></div>
+          <div class="cdesc">驱动因素存在门槛、饱和等非线性作用；随机森林在交叉验证、删样本、重新分组下都稳定。</div></div>
+        <div class="card con" data-r style="--d:.15s"><div class="cno">03</div><div class="cti">科技是核心驱动力</div>
+          <div class="chero"><div><b>58.8%</b><span>科技维度贡献</span></div><div><b>47.9%</b><span>科技从业人员</span></div><div><b>26.5%</b><span>数字基础设施</span></div></div>
+          <div class="cdesc">科技人才跨过约 138 万人才明显见效；数字基础设施越高越好。</div></div>
+        <div class="card con" data-r style="--d:.2s"><div class="cno">04</div><div class="cti">单产是关键的“中间一环”</div>
+          <div class="chero"><div><b>0.223</b><span>数字基建→单产 间接效应</span></div><div><b>74.0%</b><span>培训作用经由单产</span></div></div>
+          <div class="cdesc">数字基建经“单产 + 灌溉”双通道传导；科技投入的转化链条尚不顺畅；渠道主要反映省际差异。</div></div>
+      </div>
+      <div class="take" data-r><b>一句话：</b>粮食安全的下一步提升，关键在“人才 + 数字化”，并通过提高单产来实现。</div>
+    </div>
+
+    <!-- 5.2 政策 -->
+    <div class="blk" id="b-pol">
+      <div class="bh" data-r><div class="bk">5.2 政策建议</div><h3>三条建议：先看依据，再看举措和时间表</h3></div>
+      <div class="ptabs" id="ptabs" data-r>
+        <button class="on" data-k="0"><i>建议一</i><b>科技赋能</b><span>强化农技推广与人才培育</span></button>
+        <button data-k="1"><i>建议二</i><b>绿色筑基</b><span>分区推进生态保护</span></button>
+        <button data-k="2"><i>建议三</i><b>数字引领</b><span>加快数字基础设施建设</span></button>
+      </div>
+      <div class="ppan" id="ppan" data-r style="--d:.08s">
+        <div class="tp on">
+          <div class="g3"><div class="card ev"><b>58.8%</b><span>科技维度贡献，三个维度里最大</span></div>
+            <div class="card ev"><b>≈138 万人</b><span>科技人才的“规模门槛”，跨过才明显见效</span></div>
+            <div class="card ev"><b>74.0%</b><span>技术培训的作用经由提高单产实现</span></div></div>
+          <div class="card acts"><h4>怎么做</h4><ul class="dot">
+            <li><span class="yr">2028</span>农技培训覆盖率提升 15 个百分点；<span class="yr">2030</span>达到 60% 以上</li>
+            <li><span class="yr">每年</span>行政村科技特派员全覆盖，新增农村实用人才 10 万人</li>
+            <li><span class="yr">3 年</span>返乡涉农毕业生每人每年补贴 2—3 万元，连续补贴 3 年</li></ul></div>
+        </div>
+        <div class="tp">
+          <div class="g3"><div class="card ev"><b>正负交替</b><span>森林覆盖率的作用没有统一方向，不宜设单一目标</span></div>
+            <div class="card ev"><b>越高越拖累</b><span>农业碳排放强度越高，对得分的拖累越大</span></div>
+            <div class="card ev"><b>14.7%</b><span>绿色维度合计贡献，是生态“基底”</span></div></div>
+          <div class="card acts"><h4>怎么做</h4><ul class="dot">
+            <li><span class="yr">每年</span>覆盖率偏低的主产区：森林覆盖率提高 0.5—1 个百分点</li>
+            <li><span class="yr">原则</span>覆盖率已高的地区：守住耕地，避免林地扩张挤占粮田</li>
+            <li><span class="yr">补偿</span>生态补偿标准由每亩 15—25 元提高至 30—50 元，优先在主产区布局高标准农田</li></ul></div>
+        </div>
+        <div class="tp">
+          <div class="g3"><div class="card ev"><b>26.5%</b><span>数字基础设施一项的贡献，排第二</span></div>
+            <div class="card ev"><b>0.223</b><span>数字→单产的间接效应，所有路径中最大</span></div>
+            <div class="card ev"><b>双通道</b><span>同时经“单产 + 灌溉”起作用</span></div></div>
+          <div class="card acts"><h4>怎么做</h4><ul class="dot">
+            <li><span class="yr">2028</span>农村光纤覆盖率 95% 以上、5G 覆盖率 60%</li>
+            <li><span class="yr">每年</span>专项资金不少于 200 亿元；<span class="yr">2032</span>建成 100 个数字农业示范县</li>
+            <li><span class="yr">同步</span>数字技术与灌溉设施协同配套，提升灌溉渠道的传导效率</li></ul></div>
+        </div>
+      </div>
+      <div class="road" id="road" data-r style="--d:.12s"></div>
+    </div>
+
+    <!-- 5.3 区域 -->
+    <div class="blk" id="b-rgp">
+      <div class="bh" data-r><div class="bk">5.3 区域方案</div><h3>因地制宜：四大区域，各有侧重</h3>
+        <p>结合各区域 12 年的走势与短板，实施差异化赋能。灰线是全国平均。</p></div>
+      <div class="g2" id="rgcards"></div>
+      <div class="take" data-r><b>原则：</b>主产区“提质量”，短板区“补基础”，让每个地区都找到适合自己的提升路径。</div>
+    </div>
+
+    <div class="blk">
+      <div class="bh sintro" data-r><div class="bk">论文导读</div><h3>论文里是怎么写的</h3><p>每条建议都先写“鉴于”什么发现，再落到具体年份和数字。</p></div>
+      <div class="scrolly" data-guide="g5"></div>
+    </div>
+
+    <!-- 5.4 创新与不足 -->
+    <div class="blk lim" id="b-lim">
+      <div class="bh" data-r><div class="bk">5.4 实事求是</div><h3>研究的创新点与不足</h3></div>
+      <div class="g2">
+        <div class="card" data-r style="--d:.05s"><div class="ct"><span class="sw" style="background:var(--s1)"></span>创新点</div>
+          <p><b>① 完整的分析链条：</b>“打分 → 看变化 → 找原因 → 拆渠道 → 提建议”，从“是什么”一直追问到“为什么”“怎么办”。</p>
+          <p><b>② 更全面的评价体系：</b>把粮食生产韧性、对外依存风险纳入省级测度。</p>
+          <p><b>③ 打开机器学习“黑箱”：</b>用 SHAP 量化每个因素的贡献、门槛与协同，再用中介效应转化为可操作的政策路径。</p></div>
+        <div class="card" data-r style="--d:.12s"><div class="ct"><span class="sw" style="background:var(--s2)"></span>不足与展望</div>
+          <p><b>① 指标测度：</b>部分因素采用内涵相近的可得指标；上海等地 2021 年农业用电量疑似统计口径调整，相关指标可能被低估。</p>
+          <p><b>② 样本期：</b>截至 2022 年，未覆盖近年数字化与绿色转型的最新阶段。</p>
+          <p><b>③ 因果识别：</b>结论基于统计关联，双向固定效应下中介路径不显著，因果关系有待准自然实验等方法验证。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 结尾 -->
+<footer id="end">
+  <img class="ebg" data-img="end" alt="">
+  <div class="eov"></div>
+  <div class="wrap ein">
+    <img class="elogo" data-img="logo_white" alt="西南交通大学">
+    <h2 data-r>谢谢观看</h2>
+    <div class="es" data-r style="--d:.08s">恳请各位老师批评指正</div>
+    <div class="ecore" data-r style="--d:.14s"><b>核心结论：</b>粮食安全稳步提升；科技人才与数字基础设施是两大“发动机”，主要通过提高单产起作用。</div>
+    <dl class="people" data-r style="--d:.2s">
+      <dt>汇报人</dt><dd><span class="chipn lead">蒙浩煦</span></dd>
+      <dt>小组成员</dt><dd class="members"></dd>
+    </dl>
+    <div class="eft" data-r style="--d:.26s"><a class="btn pri" href="#hero">回到顶部 ↑</a><span>西南交通大学 · 课程小组作业</span></div>
+  </div>
+</footer>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>window.MEMBERS=["蒙浩煦", "罗家宇", "齐鑫", "胡新", "张瑞", "饶一堃", "饶亿豪", "张海曦", "肖裕坤", "杨钧雅"];window.__IMG={"logo_color": "assets/logo_color.png", "logo_white": "assets/logo_white.png", "p10": "assets/p10.webp", "p11": "assets/p11.webp", "p23": "assets/p23.webp", "p26": "assets/p26.webp", "p29": "assets/p29.webp", "p30": "assets/p30.webp", "p33": "assets/p33.webp", "p34": "assets/p34.webp", "p39": "assets/p39.webp", "p41": "assets/p41.webp", "p44": "assets/p44.webp", "t01": "assets/t01.webp", "t08": "assets/t08.webp", "t11": "assets/t11.webp", "t21": "assets/t21.webp", "t22": "assets/t22.webp", "t23": "assets/t23.webp", "t26": "assets/t26.webp", "t29": "assets/t29.webp", "t30": "assets/t30.webp", "t33": "assets/t33.webp", "t34": "assets/t34.webp", "t37": "assets/t37.webp", "t39": "assets/t39.webp", "t44": "assets/t44.webp", "ch1": "assets/ch1.webp", "ch2": "assets/ch2.webp", "ch3": "assets/ch3.webp", "ch4": "assets/ch4.webp", "ch5": "assets/ch5.webp", "end": "assets/end.webp"};window.GUIDES={"g1": [{"pg": 10, "f": [84, 92, 540, 242], "hl": [[387.5, 194.2, 522.3, 206.5], [88.6, 225.3, 268.6, 237.6]], "tag": "论文第二章 · 数据来源", "title": "数据从哪来？", "body": "全部来自《中国统计年鉴》《中国农村统计年鉴》等官方资料。<p>最终形成 <span class=\"k\">31 省 × 12 年 × 102 项</span>的平衡面板，共 372 个观测样本。</p>"}, {"pg": 10, "f": [84, 258, 540, 560], "hl": [[88.6, 356.1, 321.1, 368.4], [88.6, 387.3, 321.0, 399.6], [359.1, 449.9, 472.7, 460.9], [88.6, 512.1, 177.5, 523.1], [268.6, 543.2, 343.6, 554.2]], "tag": "论文第二章 · 缺失值处理", "title": "有缺口，分三种情况补", "body": "缺了 <span class=\"k\">1441 格（3.80%）</span>，七成集中在 2022 年：部分年鉴还没出版。<p>中间年份 → 前后两年连线插值；首末年份 → 沿用相邻年份；极端情况 → 用当年全国均值兜底。</p>"}, {"pg": 10, "f": [84, 574, 540, 752], "hl": [[272.7, 607.8, 410.8, 618.8], [88.6, 638.9, 226.6, 649.9], [346.9, 638.9, 509.4, 649.9]], "tag": "论文第二章 · 指标方向统一", "title": "统一成“越大越好”", "body": "受灾率这类指标越小越好，化肥投入则是“适度最好”。<p>全部翻转成<span class=\"k\">越大越好</span>，再压缩到 0—1 之间，不同单位的指标才能加在一起。</p>"}, {"pg": 11, "f": [58, 620, 552, 774], "hl": [[298.2, 670.4, 364.3, 679.9], [506.7, 670.2, 538.7, 680.8]], "tag": "论文表 1 · 指标体系", "title": "18 项指标，各有方向和权重", "body": "表 1 列出了 4 个维度、18 项三级指标，每项都标注了“正向 / 负向 / 适度”和最终权重。<p>下一页把这张表画成图。</p>"}], "g2": [{"pg": 23, "f": [96, 46, 516, 390], "hl": [], "tag": "论文图 4", "title": "一张图看 31 省 × 12 年", "body": "左边每一格是一个省一年的得分，<span class=\"k\">颜色越亮（越偏黄）得分越高</span>；右边是 2022 年的排名。<p>各行按 2022 年得分从高到低排列，上方的主产区 12 年来一直偏亮，强省始终领先。</p>"}, {"pg": 23, "f": [84, 392, 540, 728], "hl": [[384.8, 399.1, 482.1, 410.1], [112.6, 554.7, 386.8, 565.7], [88.6, 679.2, 185.3, 690.2]], "tag": "论文第四章 · 空间格局", "title": "主产区领先，直辖市偏低", "body": "2022 年前五：黑龙江、山东、内蒙古、河南、江苏。<p>按 12 年均值，<span class=\"k\">黄淮海 0.461、东北 0.439</span> 领先；黑龙江连续 12 年全国第一。</p>"}, {"pg": 26, "f": [84, 568, 540, 782], "hl": [[190.8, 575.7, 402.4, 588.0], [279.0, 606.8, 509.7, 619.1]], "tag": "论文第四章 · 空间集聚", "title": "“扎堆”现象在减弱", "body": "Moran’s I 从 <span class=\"k\">0.322 降到 0.182</span>，2019 年以后不再显著。<p>好省挨着好省的“抱团”格局在松动，相对差距趋于收敛。</p>"}, {"pg": 29, "f": [84, 380, 540, 746], "hl": [[316.7, 417.5, 498.4, 429.8], [284.0, 542.4, 384.1, 553.4], [88.6, 604.7, 199.6, 615.7]], "tag": "论文第五章 · 趋势预测", "title": "2030 年全国达到 0.492", "body": "较 2022 年再涨 25%，年均 2.83%。<p>西南增长最快；长三角序列波动大、<span class=\"k\">精度不合格，只作参考</span>，论文里如实注明。</p>"}], "g3": [{"pg": 30, "f": [92, 222, 522, 392], "hl": [[98, 267, 512, 284]], "tag": "论文表 6 · 模型比选", "title": "随机森林排第一", "body": "六种模型用同一套“考试题”（68 个测试样本）比较。<p>随机森林 <span class=\"k\">R² = 0.873</span>，RMSE、MAE、MSE 也都是最小，被选为主模型。</p>"}, {"pg": 33, "f": [84, 266, 540, 478], "hl": [[244.8, 274.8, 462.0, 285.8], [88.6, 305.8, 231.9, 316.8], [210.4, 430.4, 522.1, 441.4]], "tag": "论文第六章 · 特征重要性", "title": "谁最重要？换模型也不变", "body": "科技从业人员 47.9%、数字基础设施 26.5% 排前两位。<p>换成第二名的梯度提升树重算，<span class=\"k\">前三名排序不变</span>，结论不依赖模型选择。</p>"}, {"pg": 34, "f": [84, 620, 540, 772], "hl": [[405.7, 689.4, 522.5, 700.4], [384.3, 720.5, 522.0, 731.5]], "tag": "论文第六章 · 依赖效应", "title": "人才有“规模门槛”", "body": "科技从业人员在约 <span class=\"k\">138 万人</span>以下时平均贡献为负，跨过之后跃升为正。<p>政策含义：人才投入要形成规模才见效。</p>"}], "g4": [{"pg": 39, "f": [92, 160, 528, 414], "hl": [[100, 205, 522, 234], [100, 264, 522, 294], [100, 324, 522, 353]], "tag": "论文表 9 · 中介效应", "title": "四条路径通过检验", "body": "高亮的是三条效应最清楚的路径：培训→单产（H1）、数字→单产（H3）、数字→灌溉（H5）。<p>判断标准：<span class=\"k\">95% 置信区间不含 0</span>。</p>"}, {"pg": 41, "f": [80.1, 41.4, 387.8, 232.6], "hl": [[97.4, 93.4, 113.4, 104.0], [97.4, 111.0, 113.4, 121.7], [97.4, 128.6, 113.4, 139.3]], "tag": "论文表 10 · 稳健性检验", "title": "如实报告：哪些稳、哪些不稳", "body": "换一种因变量算法，<span class=\"k\">单产渠道 H1—H3 依然显著</span>；灌溉渠道 H5 不再显著。<p>双向固定效应下六条路径都不显著：渠道主要反映省与省之间的差异。</p>"}], "g5": [{"pg": 44, "f": [84, 208, 540, 422], "hl": [[268.5, 310.9, 509.9, 323.1], [267.2, 342.4, 402.2, 353.4]], "tag": "论文第八章 · 政策建议一", "title": "科技赋能：先补人才", "body": "依据：科技贡献 58.8%，培训 74.0% 的作用经由单产实现。<p>举措落到<span class=\"k\">具体年份和数字</span>：培训覆盖率、科技特派员、返乡毕业生补贴。</p>"}, {"pg": 44, "f": [84, 428, 540, 642], "hl": [[343.2, 498.0, 461.6, 509.0], [248.6, 560.3, 423.4, 571.3]], "tag": "论文第八章 · 政策建议二", "title": "绿色筑基：分区施策", "body": "森林覆盖率的作用没有统一方向，所以<span class=\"k\">不设单一目标</span>：<p>覆盖率低的主产区多种树；覆盖率已高的地区守住耕地。</p>"}, {"pg": 44, "f": [84, 646, 540, 796], "hl": [[447.0, 715.9, 522.0, 726.9], [204.5, 746.6, 302.1, 758.9], [88.6, 777.8, 281.0, 790.1]], "tag": "论文第八章 · 政策建议三", "title": "数字引领：建好“双通道”", "body": "数字基建经单产的间接效应在所有路径中最大。<p>光纤、5G、专项资金、示范县，并与<span class=\"k\">灌溉设施协同配套</span>。</p>"}]};</script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body></html>
