@@ -451,7 +451,7 @@
     },
     paint() {
       const L = this.L, g = this.cv.getContext('2d');
-      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, this.cv.width, this.cv.height); g.drawImage(this.base, 0, 0);
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, this.cv.width, this.cv.height); if (this.base.width && this.base.height) g.drawImage(this.base, 0, 0);
       g.scale(L.dpr, L.dpr);
       let left = 0;
       this.cells.forEach(c => {
